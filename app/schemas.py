@@ -5,7 +5,8 @@ class PostBase(BaseModel):
     title:str
     content:str
     published:bool=True
-    pass
+    
+
 
 
 class PostCreate(PostBase):
@@ -16,10 +17,10 @@ class PostCreate(PostBase):
 class Post(PostBase):
     created_at:datetime
     id:int
-
     class Config:
         orm_mode = True
 
+    
 
 
 

@@ -8,9 +8,13 @@ from .. import schemas
 from ..database import get_db
 
 
-router = APIRouter()
+router = APIRouter(
+        prefix="/posts",
+        tags=["Posts"]
+        
+        )
 
-@router.get("/posts", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.Post])
 async def get_posts(db:Session=Depends(get_db)):
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
@@ -18,7 +22,7 @@ async def get_posts(db:Session=Depends(get_db)):
     all_posts=db.query(models.Post).all()
     return all_posts
 
-@router.post("/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_post(post : schemas.PostCreate, db:Session=Depends(get_db)):
     
     created_post = models.Post(**post.dict())
@@ -35,18 +39,16 @@ def create_post(post : schemas.PostCreate, db:Session=Depends(get_db)):
     return created_post
 
 
-@router.get("/posts/{id}", response_model=schemas.Post)
+@router.get("/{id}", status_code=status.HTTP_404_NOT_FOUND)
 def get_post(id:int, db:Session=Depends(get_db)):
-
-    fetched_post = db.query(models.Post).filter(models.Post.id==id).first()
+    fetched_post = db.query(models.Post).filter(models.Post.id==id)
     
-
     # cursor.execute("""SELECT * FROM posts WHERE id = %s """, (str(id),))
 
     # post=cursor.fetchone()
     # print("post", post)
-    
-    if not fetched_post:
+    print(fetched_post.first() == None)
+    if fetched_post.first() == None:
         
         return HTTPException(status.HTTP_404_NOT_FOUND, detail=f"post with id {id} not found")
     else:
@@ -56,7 +58,7 @@ def get_post(id:int, db:Session=Depends(get_db)):
 
 
 
-@router.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id:int,db:Session=Depends(get_db)):
     # cursor.execute("""DELETE FROM posts  WHERE id = %s returning *""", (str(id),))
     # deleted_post = cursor.fetchone()
@@ -78,7 +80,7 @@ def delete_post(id:int,db:Session=Depends(get_db)):
 
         
 
-@router.put("/posts/{id}",status_code=status.HTTP_404_NOT_FOUND, response_model=schemas.Post)
+@router.put("/{id}",status_code=status.HTTP_404_NOT_FOUND, response_model=schemas.Post)
 def update_post(id:int, post:schemas.PostCreate, db:Session=Depends(get_db)) :
     # cursor.execute("""Update posts SET title = %s, content = %s, published = %s WHERE id = %sRETURNING *""",(post.title, post.content, post.published, id))
     # conn.commit()
