@@ -1,6 +1,7 @@
 import imp
+from os import access
 from fastapi import APIRouter, status, HTTPException, Depends, Response
-from .. import database, schemas, models
+from .. import database, schemas, models, oauth2
 from sqlalchemy.orm import Session
 
 from .. import utils
@@ -24,10 +25,13 @@ def login(user_credentials:schemas.UserLogin, db:Session=Depends(database.get_db
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
                 detail="credentials not verified")
 
-    else:
+    # create token
+    access_token = oauth2.get_jwt_token({"user_id":user.id,"user_email":user.email})
 
-        return {
-                "message":"Welcome to Goa !!!"
-        }
+    return {
+            "access_token":access_token,
+            "token_type":"bearer"
+
+    }
 
     
