@@ -24,7 +24,7 @@ def get_jwt_token(data:dict):
 def verify_token(token:str, credential_exception):
     try:
         payload=jwt.decode(token, SECRET_KEY,algorithms=[ALGORITHM])
-
+        print("token")
         # get whatever key you passed when you generated token initially
         user_id:str = payload.get("user_id")
         user_email:str = payload.get("user_email")
