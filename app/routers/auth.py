@@ -9,7 +9,7 @@ from .. import utils
 
 router = APIRouter(tags=["Authentication"])
 
-@router.post("/login")
+@router.post("/login", response_model=schemas.Token)
 def login(user_credentials:OAuth2PasswordRequestForm = Depends(), db:Session=Depends(database.get_db)):
     print("login called",user_credentials )
 
@@ -38,7 +38,7 @@ def login(user_credentials:OAuth2PasswordRequestForm = Depends(), db:Session=Dep
     return {
             "access_token":access_token,
             "token_type":"bearer"
-
     }
+    
 
     

@@ -22,7 +22,7 @@ async def get_posts(db:Session=Depends(get_db)):
     return all_posts
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_post(post : schemas.PostCreate, db:Session=Depends(get_db),user_token_info:schemas.TokenData=Depends(oauth2.get_current_user) ):
+def create_post(post : schemas.PostCreate, db:Session=Depends(get_db),current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     
     created_post = models.Post(**post.dict())
 
@@ -39,7 +39,7 @@ def create_post(post : schemas.PostCreate, db:Session=Depends(get_db),user_token
 
 
 @router.get("/{id}", status_code=status.HTTP_404_NOT_FOUND)
-def get_post(id:int, db:Session=Depends(get_db),user_token_info:schemas.TokenData=Depends(oauth2.get_current_user) ):
+def get_post(id:int, db:Session=Depends(get_db),current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     fetched_post = db.query(models.Post).filter(models.Post.id==id)
     
     # cursor.execute("""SELECT * FROM posts WHERE id = %s """, (str(id),))
@@ -58,7 +58,7 @@ def get_post(id:int, db:Session=Depends(get_db),user_token_info:schemas.TokenDat
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id:int,db:Session=Depends(get_db),user_token_info:schemas.TokenData=Depends(oauth2.get_current_user) ):
+def delete_post(id:int,db:Session=Depends(get_db),current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     # cursor.execute("""DELETE FROM posts  WHERE id = %s returning *""", (str(id),))
     # deleted_post = cursor.fetchone()
     
@@ -80,7 +80,7 @@ def delete_post(id:int,db:Session=Depends(get_db),user_token_info:schemas.TokenD
         
 
 @router.put("/{id}",status_code=status.HTTP_404_NOT_FOUND, response_model=schemas.Post)
-def update_post(id:int, post:schemas.PostCreate, db:Session=Depends(get_db), user_token_info:schemas.TokenData=Depends(oauth2.get_current_user) ):
+def update_post(id:int, post:schemas.PostCreate, db:Session=Depends(get_db), current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     # cursor.execute("""Update posts SET title = %s, content = %s, published = %s WHERE id = %sRETURNING *""",(post.title, post.content, post.published, id))
     # conn.commit()
     # updated_post = cursor.fetchone()

@@ -2,7 +2,10 @@ from calendar import c
 from datetime import datetime, timedelta
 from fastapi import Depends, status, HTTPException
 from jose import jwt, JWTError
-
+from app import database
+from . import models
+from .database import get_db
+from sqlalchemy.orm import Session
 from app.schemas import TokenData
 from fastapi.security import OAuth2PasswordBearer
 
@@ -10,7 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 SECRET_KEY='8390440305188503943062962101038105244839'
 ALGORITHM='HS256'
-ACCESS_TOKEN_EXPIRATION_TIME=30
+ACCESS_TOKEN_EXPIRATION_TIME=60
 
 def get_jwt_token(data:dict):
     encoded_data = data.copy()
@@ -39,10 +42,17 @@ def verify_token(token:str, credential_exception):
         raise credential_exception
 
 
-def get_current_user(token:str=Depends(oauth2_scheme)):
+def get_current_user(token:str=Depends(oauth2_scheme), db:Session=Depends(get_db)):
     credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, 
                                             detail="Could not validate Credentials",
                                             headers={"WWW-Authenticate":"Bearer"}
                                         )
+    token_data = verify_token(token=token, credential_exception=credential_exception)
+    id :str=token_data.id
+    email:str=token_data.email
 
-    return verify_token(token=token, credential_exception=credential_exception)
+    fetched_user = db.query(models.User).filter(models.User.id == int(id)).first()
+    
+    if not fetched_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with {id} not found")
+    return fetched_user 
