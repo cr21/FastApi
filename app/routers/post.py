@@ -38,21 +38,14 @@ def create_post(post : schemas.PostCreate, db:Session=Depends(get_db),current_us
     return created_post
 
 
-@router.get("/{id}", status_code=status.HTTP_404_NOT_FOUND)
+@router.get("/{id}", status_code=status.HTTP_404_NOT_FOUND,response_model=schemas.Post)
 def get_post(id:int, db:Session=Depends(get_db),current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     fetched_post = db.query(models.Post).filter(models.Post.id==id)
-    
-    # cursor.execute("""SELECT * FROM posts WHERE id = %s """, (str(id),))
-
-    # post=cursor.fetchone()
-    # print("post", post)
-    print(fetched_post.first() == None)
     if fetched_post.first() == None:
         
         return HTTPException(status.HTTP_404_NOT_FOUND, detail=f"post with id {id} not found")
-    else:
-        
-        return fetched_post
+    else: 
+        return fetched_post.first()
 
 
 
