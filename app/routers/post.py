@@ -25,7 +25,7 @@ async def get_posts(db:Session=Depends(get_db)):
 def create_post(post : schemas.PostCreate, db:Session=Depends(get_db),current_user:schemas.UserOut=Depends(oauth2.get_current_user) ):
     
     created_post = models.Post(**post.dict())
-
+    print("created_post", create_post)
     db.add(created_post)
     db.commit()
     db.refresh(created_post)
