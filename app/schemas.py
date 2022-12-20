@@ -2,29 +2,6 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr
 
-class PostBase(BaseModel):
-    title:str
-    content:str
-    published:bool=True
-    
-
-
-
-class PostCreate(PostBase):
-    pass
-
-
-
-class Post(PostBase):
-    created_at:datetime
-    id:int
-    class Config:
-        orm_mode = True
-
-    
-
-
-
 
 class UserCreate(BaseModel):
     email:EmailStr
@@ -44,6 +21,35 @@ class UserOut(BaseModel):
 class UserLogin(BaseModel):
     email:EmailStr
     password:str
+
+
+class PostBase(BaseModel):
+    title:str
+    content:str
+    published:bool=True
+    
+
+
+
+class PostCreate(PostBase):
+    pass
+
+
+
+class Post(PostBase):
+    created_at:datetime
+    id:int
+    owner_id:int
+    # we want user information in post 
+    owner: UserOut
+
+    class Config:
+        orm_mode = True
+
+    
+
+
+
 
 
 class Token(BaseModel):
