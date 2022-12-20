@@ -1,22 +1,8 @@
-from curses.ascii import HT
-from email.quoprimime import body_check
-from statistics import mode
 from . import models
-from .utils import hash
-from .database import engine, get_db
-from random import randrange
-from re import I
-from typing import Optional, List
-from fastapi import FastAPI, Response, status,HTTPException, Depends
-from fastapi.params import Body
-import psycopg2
-import time
-from sqlalchemy.orm import Session
-from psycopg2.extras import RealDictCursor
-# for Validation of Requests
-from pydantic import BaseModel
-from . import schemas
+from .database import engine
+from fastapi import FastAPI
 # Database connection
+from .config import settings
 from .routers import post, user, auth
 
 models.Base.metadata.create_all(bind=engine)
