@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, EmailStr
-
+from pydantic.types import conint
 
 class UserCreate(BaseModel):
     email:EmailStr
@@ -37,8 +37,9 @@ class PostCreate(PostBase):
 
 
 class Post(PostBase):
-    created_at:datetime
+    
     id:int
+    created_at:datetime
     owner_id:int
     # we want user information in post 
     owner: UserOut
@@ -47,7 +48,14 @@ class Post(PostBase):
         orm_mode = True
 
     
+class PostOut(BaseModel):
+    Post:Post
+    votes:int
 
+    class Config:
+        orm_mode = True
+
+    
 
 
 
@@ -59,3 +67,9 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id:Optional[str]=None
     email:Optional[str]=None
+
+
+class Vote(BaseModel):
+    post_id:int
+    dir:conint(le=1)
+    
