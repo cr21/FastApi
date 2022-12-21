@@ -20,19 +20,19 @@ jobs :
       JWT_ALGORITHM: ${{secrets.JWT_ALGORITHM}}
       JWT_TOKEN_EXPIRED_MINUTES: ${{secrets.JWT_TOKEN_EXPIRED_MINUTES}}
 
-    # services:
-    #   postgres:
-    #     image: postgres
-    #     env:
-    #       POSTGRES_PASSWORD: ${{secrets.PG_DATABASE_PASSWORD}}
-    #       POSTGRES_DB: ${{secrets.PG_DATABASE_NAME}}_test
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ${{secrets.PG_DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.PG_DATABASE_NAME}}_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     runs-on : ubuntu-latest
     steps:
