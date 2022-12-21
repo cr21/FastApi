@@ -1,0 +1,38 @@
+version: "3"
+services:
+  api:
+    build: .
+    depends_on:
+      - postgres
+    ports: 
+        # - <port on localhost>:<port on container>
+        - 8000:8000
+    volumes:
+      - ./:/usr/src/app:ro
+    # override docker command from Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+    # env_file:
+    #   - ./.env
+    environment:
+      - PG_DATABASE_HOST=postgres
+      - PG_DATABASE_PORT=5432
+      - PG_DATABASE_PASSWORD=root
+      - PG_DATABASE_USERNAME=postgres
+      - PG_DATABASE_NAME=fastapi
+      - JWT_SECRET_KEY=8390440305188503943062962101038105244839
+      - JWT_ALGORITHM=HS256
+      - JWT_TOKEN_EXPIRED_MINUTES=60
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=fastapi
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+  postgres-db:
+
+
