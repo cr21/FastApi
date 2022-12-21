@@ -5,17 +5,20 @@ from fastapi import FastAPI
 from .config import settings
 from .routers import post, user, auth, vote
 
+# create automatic database table
 # models.Base.metadata.create_all(bind=engine)
 
 
 
-app = FastAPI()
+app = FastAPI(title="Social Media Fast API")
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(vote.router)
 
 
-
+@app.get("/")
+def root_route():
+    return {"message":"Hello world"}
 # title: str, content : str
 # uvicorn app.main:app --reload

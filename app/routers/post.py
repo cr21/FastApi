@@ -66,7 +66,8 @@ def get_post(id:int, db:Session=Depends(get_db),current_user:schemas.UserOut=Dep
                     group_by(models.Post.id).\
                     filter(models.Post.id==id).first()
 
-    
+    print("**", post)
+    print("+"*100)
     if not post:
         
         return HTTPException(status.HTTP_404_NOT_FOUND, detail=f"post with id {id} not found")
