@@ -17,6 +17,7 @@ Exploring FastAPI
      POST /posts  /users /login /vote 
      PUT /posts/id
      
+![FastAPI](https://i.imgur.com/mRJNMnW.png)
 
 ## Tests:
      Added tests for users, votes and posts
@@ -94,5 +95,5 @@ please create database according to setting given or you can change accordingly
 
 - Other Deployment instructions are added in workflows, Procfile, gunicorn.service, nginx files, please see in repository
 
-![FastAPI](https://i.imgur.com/mRJNMnW.png)
+
   
