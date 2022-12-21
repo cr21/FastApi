@@ -7,7 +7,33 @@ on :
     branches : ["main"]
 
 jobs :
-  job1: 
+  build:
+    environment:
+      name: testing
+    env:
+      PG_DATABASE_HOST: ${{secrets.PG_DATABASE_HOST}}
+      PG_DATABASE_PORT: ${{secrets.PG_DATABASE_PORT}}
+      PG_DATABASE_PASSWORD: ${{secrets.PG_DATABASE_PASSWORD}}
+      PG_DATABASE_USERNAME: ${{secrets.PG_DATABASE_USERNAME}}
+      PG_DATABASE_NAME: ${{secrets.PG_DATABASE_NAME}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      JWT_ALGORITHM: ${{secrets.JWT_ALGORITHM}}
+      JWT_TOKEN_EXPIRED_MINUTES: ${{secrets.JWT_TOKEN_EXPIRED_MINUTES}}
+
+    # services:
+    #   postgres:
+    #     image: postgres
+    #     env:
+    #       POSTGRES_PASSWORD: ${{secrets.PG_DATABASE_PASSWORD}}
+    #       POSTGRES_DB: ${{secrets.PG_DATABASE_NAME}}_test
+    #     ports:
+    #       - 5432:5432
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+
     runs-on : ubuntu-latest
     steps:
       - name: pulling git repo
