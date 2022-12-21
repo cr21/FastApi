@@ -19,6 +19,6 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root_route():
-    return {"message":"Hello world pushing to ubuntu"}
+    return {"message":"Hello world pushing to ubuntu and heroku"}
 # title: str, content : str
 # uvicorn app.main:app --reload
